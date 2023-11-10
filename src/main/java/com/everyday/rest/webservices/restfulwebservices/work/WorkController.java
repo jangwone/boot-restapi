@@ -1,6 +1,7 @@
 package com.everyday.rest.webservices.restfulwebservices.work;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 //REST API
@@ -19,4 +20,9 @@ public class WorkController {
 		return new JsonBean("json message");
 	}
 	
+	@GetMapping(path = "/test/path/{name}")
+	public JsonBean beanNamePathVariable(@PathVariable String name) {
+		return new JsonBean(
+				String.format("hello , %s", name));
+	}
 }
