@@ -49,6 +49,9 @@ public class User {
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
+	public List<Post> getPosts() {
+		return posts;
+	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -58,7 +61,9 @@ public class User {
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
-	
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";

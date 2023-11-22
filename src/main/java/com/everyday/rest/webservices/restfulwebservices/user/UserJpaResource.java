@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.everyday.rest.webservices.restfulwebservices.jpa.PostRepository;
 import com.everyday.rest.webservices.restfulwebservices.jpa.UserRepository;
 
 import jakarta.validation.Valid;
@@ -29,8 +30,11 @@ public class UserJpaResource {
 	
 	private UserRepository repository;
 	
-	public UserJpaResource(UserRepository repository ) {
+	private PostRepository postRrepository;
+	
+	public UserJpaResource(UserRepository repository, PostRepository postRrepository) {
 		this.repository = repository;
+		this.postRrepository =postRrepository;
 	}
 	
 	@GetMapping("/users")
@@ -60,12 +64,41 @@ public class UserJpaResource {
 		repository.deleteById(id);
 	}
 	
+	@GetMapping("/users/{id}/posts")
+	public List<Post> retrievePostsForUser(@PathVariable int id) {
+		Optional<User> user = repository.findById(id);
+		
+		if(user.isEmpty()) 
+			throw new UserNotFoundException("id:"+id);
+
+		return user.get().getPosts();
+	}
+	
 	@PostMapping("/users")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
 		User savedUser = repository.save(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(savedUser.getId())
+				.toUri();
+		
+		return ResponseEntity.created(location).build();
+	}
+	
+	@PostMapping("/users/{id}/posts")
+	public ResponseEntity<Object> retrievePostsForUser(@PathVariable int id, @Valid @RequestBody Post  post) {
+		Optional<User> user = repository.findById(id);
+		
+		if(user.isEmpty()) 
+			throw new UserNotFoundException("id:"+id);
+		
+		post.setUser(user.get());
+		
+		Post savedPost = postRrepository.save(post);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPost.getId())
 				.toUri();
 		
 		return ResponseEntity.created(location).build();
