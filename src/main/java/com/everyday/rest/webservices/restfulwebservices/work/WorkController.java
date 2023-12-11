@@ -30,7 +30,7 @@ public class WorkController {
 		return new JsonBean("json message");
 	}
 	
-	@GetMapping(path = "/test/path/{name}")
+	@GetMapping(path = "test/path/{name}")
 	public JsonBean beanNamePathVariable(@PathVariable String name) {
 		return new JsonBean(
 				String.format("hello , %s", name));
