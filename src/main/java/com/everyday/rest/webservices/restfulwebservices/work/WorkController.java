@@ -18,6 +18,11 @@ public class WorkController {
 		this.messageSource = messageSource;
 	}
 	
+	@GetMapping("basicauth")
+	public String basicAuthCheck() {
+		return "Success";
+	}
+	
 	@GetMapping("test")
 	public String abc() {
 		return "test ";
